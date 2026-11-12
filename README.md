@@ -2,6 +2,10 @@
 
 A personal finance web application to manage income and expenses.
 
+Developed by: Anas
+
+Project Type: Personal Project
+
 ## About the Project
 Smart Expense Tracker helps users record their income and expenses, calculate their balance, and view transaction history.
 
