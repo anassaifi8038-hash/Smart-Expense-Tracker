@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Expense Tracker</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#172554">
+</head>
+
+<body>
+
+    <header>
+        <h1>Smart Expense Tracker</h1>
+        <p>Manage your money smartly</p>
+    </header>
+
+    <main>
+
+        <!-- Dashboard -->
+        <section class="dashboard">
+
+            <div class="card">
+                <h3>Total Balance</h3>
+                <h2 id="balance">₹0.00</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Income</h3>
+                <h2 id="income">₹0.00</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Expense</h3>
+                <h2 id="expense">₹0.00</h2>
+            </div>
+
+        </section>
+
+        <!-- Add Transaction -->
+        <section class="form-section">
+
+            <h2>Add Transaction</h2>
+
+            <form id="transactionForm">
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Transaction Name"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Amount"
+                    min="0.01"
+                    step="0.01"
+                    required
+                >
+
+                <select id="type">
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                </select>
+
+                <select id="category">
+                    <option value="Food">Food</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Education">Education</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <button type="submit">Add Transaction</button>
+
+            </form>
+
+        </section>
+
+        <!-- Monthly Budget -->
+        <section class="budget-section">
+
+            <h2>Monthly Budget</h2>
+
+            <div class="budget-form">
+
+                <input
+                    type="number"
+                    id="budgetAmount"
+                    placeholder="Enter Monthly Budget"
+                    min="1"
+                >
+
+                <button type="button" id="setBudget">
+                    Set Budget
+                </button>
+
+            </div>
+
+            <h3 id="budgetStatus">No budget set yet.</h3>
+
+            <div class="progress-container">
+                <div id="budgetProgress"></div>
+            </div>
+
+        </section>
+
+        <!-- Transaction History -->
+        <section class="history">
+
+            <h2>Transaction History</h2>
+
+            <div id="transactionList">
+                No transactions yet.
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener("load", function() {
+
+                navigator.serviceWorker.register("./service-worker.js")
+
+                    .then(function() {
+                        console.log("Service Worker Registered!");
+                    })
+
+                    .catch(function(error) {
+                        console.log("Service Worker Error:", error);
+                    });
+
+            });
+
+        }
+    </script>
+
+</body>
+</html>
