@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "smart-expense-v1";
+const CACHE_NAME = "smart-expense-v2";
 
 const FILES_TO_CACHE = [
     "./",
@@ -9,6 +9,7 @@ const FILES_TO_CACHE = [
     "./manifest.json"
 ];
 
+// Install new service worker
 self.addEventListener("install", function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
@@ -19,6 +20,7 @@ self.addEventListener("install", function(event) {
     self.skipWaiting();
 });
 
+// Activate and remove old cache
 self.addEventListener("activate", function(event) {
     event.waitUntil(
         caches.keys().then(function(cacheNames) {
@@ -29,16 +31,37 @@ self.addEventListener("activate", function(event) {
                     }
                 })
             );
+        }).then(function() {
+            return self.clients.claim();
         })
     );
-
-    self.clients.claim();
 });
 
+// Network first, cache fallback
 self.addEventListener("fetch", function(event) {
+
+    if (event.request.method !== "GET") {
+        return;
+    }
+
     event.respondWith(
-        caches.match(event.request).then(function(response) {
-            return response || fetch(event.request);
-        })
+        fetch(event.request)
+            .then(function(response) {
+
+                if (response && response.status === 200 &&
+                    new URL(event.request.url).origin === self.location.origin) {
+
+                    const responseCopy = response.clone();
+
+                    caches.open(CACHE_NAME).then(function(cache) {
+                        cache.put(event.request, responseCopy);
+                    });
+                }
+
+                return response;
+            })
+            .catch(function() {
+                return caches.match(event.request);
+            })
     );
 });
